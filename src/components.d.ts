@@ -29,6 +29,45 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface FormyForm {
+      'clear': () => void;
+      'customValidators': Function;
+      'getErrors': () => {};
+      'getValues': () => {};
+      'onSuccess': Function;
+      'validate': (elements: any) => any;
+    }
+  }
+
+  interface HTMLFormyFormElement extends StencilComponents.FormyForm, HTMLStencilElement {}
+
+  var HTMLFormyFormElement: {
+    prototype: HTMLFormyFormElement;
+    new (): HTMLFormyFormElement;
+  };
+  interface HTMLElementTagNameMap {
+    'formy-form': HTMLFormyFormElement;
+  }
+  interface ElementTagNameMap {
+    'formy-form': HTMLFormyFormElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'formy-form': JSXElements.FormyFormAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface FormyFormAttributes extends HTMLAttributes {
+      'customValidators'?: Function;
+      'onSuccess'?: Function;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface MyComponent {
       'first': string;
       'last': string;

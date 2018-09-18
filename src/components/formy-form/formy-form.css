@@ -1,0 +1,9 @@
+/* or, if the browser supports it: */
+input.hf-validated:invalid {
+  border: 1px solid red;
+}
+
+/* div.hf-warning {
+  display: inline-block;
+  background: #f1f1f1;
+} */
