@@ -1,4 +1,5 @@
 import { Component, Element, State, Prop, Method } from '@stencil/core';
+import hyperform from 'hyperform';
 
 @Component({
   tag: 'formy-form',
@@ -12,11 +13,14 @@ export class FormyForm {
 
   @State() inputs: Array<HTMLInputElement>;
 
-  componentDidLoad() {
-    const form: HTMLFormElement = this.el.querySelector('form');
-    this.inputs = Array.from(form.querySelectorAll('input, select, textarea, radio'));
-  }
+  hyperform = hyperform;
 
+  componentDidLoad() {
+    this.hyperform(window, {
+      revalidate: 'onblur',
+    });
+    this.inputs = Array.from(this.el.querySelectorAll('input, select, textarea'));
+  }
 
   getFormData() {
     let elements = {};
@@ -30,23 +34,45 @@ export class FormyForm {
   }
 
   @Method()
-  getValues() {
+  setField(name: string, value: string): void {
+    if (typeof value === 'string') {
+      const input = this.inputs.filter(input => input.name === name);
+      if (input.length === 1) {
+        input[0].value = value;
+      }
+    }
+  }
+
+  @Method()
+  $(name: string) {
+    const input = this.inputs.filter(input => input.name === name);
+    if (input.length === 1) {
+      return input[0];
+    }
+  }
+
+  @Method()
+  values() {
+    const types = ['radio', 'checkbox'];
     let values = {};
     this.inputs.forEach(input => {
-      const { name, value } = input;
+      const { name, value, type, checked } = input;
       if (name) {
         values[name] = value;
+      }
+      if (types.includes(type)) {
+        values[name] = checked;
       }
     });
     return values;
   }
 
   @Method()
-  getErrors() {
+  errors() {
     let errors = {};
     this.inputs.forEach(input => {
       const { name } = input;
-      if (name) {
+      if (name && input.classList.contains('hr-validated')) {
         errors[name] = input.validationMessage;
       }
     })
@@ -56,7 +82,11 @@ export class FormyForm {
   @Method()
   validate(elements) {
     // setup extra validators
-    this.customValidators(elements);
+    this.customValidators &&
+      this.customValidators({
+        elements,
+        addValidator: this.hyperform.addValidator,
+      });
     const isValid = this.inputs.reduce((acc, input) => {
       // @ts-ignore
       return acc && input.reportValidity();
@@ -65,7 +95,7 @@ export class FormyForm {
   }
 
   @Method()
-  clear() {
+  clear(): void {
     this.inputs.forEach(input => input.value = '');
   }
 
@@ -79,7 +109,10 @@ export class FormyForm {
           console.log('isValid', isValid);
           if (isValid) {
             // onSuccess validation
-            this.onSuccess(this.getValues(), this.getFormData());
+            this.onSuccess && this.onSuccess(this.values(), {
+              elements: this.getFormData(),
+              addValidator: this.hyperform.addValidator,
+            });
           }
         }}>
         <slot />

@@ -5,21 +5,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>Stencil Component Starter</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/hyperform/0.9.5/hyperform.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/hyperform/0.9.5/hyperform.min.js"></script> -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      hyperform(window, {
-        revalidate: 'onblur',
-      });
       const el = document.querySelector('formy-form');
-
-      // run CustomValidators
-      const validators = (elements) => { };
-      el.customValidators = validators;
-
-      // handle onSuccess & onError
-      const onSuccess = (values, elements) => { }
-      el.onSuccess = onSuccess;
+      el.onSuccess = (values) => {
+        console.log('success', values);
+      };
     });
   </script>
   <script src="/build/formy.js"></script>
@@ -27,13 +19,11 @@
 </head>
 
 <body>
-
   <formy-form>
     <input name="password" type="password" required placeholder="password" />
+    <input name="enable_two_factor" type="radio" />
     <button type="submit">submit</button>
   </formy-form>
-
-
 </body>
 
 </html>

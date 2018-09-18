@@ -30,12 +30,14 @@ declare global {
 
   namespace StencilComponents {
     interface FormyForm {
+      '$': (name: string) => HTMLInputElement;
       'clear': () => void;
       'customValidators': Function;
-      'getErrors': () => {};
-      'getValues': () => {};
+      'errors': () => {};
       'onSuccess': Function;
+      'setField': (name: string, value: string) => void;
       'validate': (elements: any) => any;
+      'values': () => {};
     }
   }
 
