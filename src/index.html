@@ -6,13 +6,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>Stencil Component Starter</title>
   <script src="/build/formy.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const formy = document.getElementsByTagName('formy-form');
+      const formy1 = formy[0];
+      const formy2 = formy[1];
 
+      formy1.options = { revalidate: 'onblur' };
+      formy1.onSuccess = (values) => console.log('formy1', values);
+
+      formy2.options = { revalidate: 'onsubmit' };
+      formy2.onSuccess = (values) => console.log('formy2', values);
+    })
+  </script>
 </head>
 
 <body>
   <formy-form>
     <input name="password" type="password" required placeholder="password" />
-    <input name="enable_two_factor" type="radio" />
+    <input name="zipcode" type="number" required placeholder="zipcode" />
+    <input name="enable_two_factor" type="checkbox" />
+    <button type="submit">submit</button>
+  </formy-form>
+
+  <formy-form>
+    <input name="password" type="password" required placeholder="password" />
+    <input name="zipcode" type="number" required placeholder="zipcode" />
+    <input name="enable_two_factor" type="checkbox" />
     <button type="submit">submit</button>
   </formy-form>
 </body>
