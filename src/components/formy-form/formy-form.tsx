@@ -53,7 +53,7 @@ export class FormyForm {
 
   @Method()
   values() {
-    const types = ['radio', 'checkbox'];
+    const types = ['checkbox'];
     let values = {};
     this.inputs.forEach(input => {
       const { name, value, type, checked } = input;
