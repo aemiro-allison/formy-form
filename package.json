@@ -1,6 +1,6 @@
 {
   "name": "formy-form",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Stenciljs powered form web component",
   "engines": {
     "node": "9.11.1",

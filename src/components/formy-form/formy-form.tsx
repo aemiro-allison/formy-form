@@ -18,7 +18,7 @@ export class FormyForm {
   };
 
   componentDidLoad() {
-    // have hyperform manage HTML5 Constraint API for all inputs where formy-form is used.
+    // have hyperform manage HTML5 Constraint API for all inputs under where formy-form is used.
     hyperform(this.el.querySelector('form'), {
       ...this.defaultOptions,
       ...this.options,
