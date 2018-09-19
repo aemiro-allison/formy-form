@@ -35,6 +35,7 @@ declare global {
       'customValidators': Function;
       'errors': () => {};
       'onSuccess': Function;
+      'options': Object;
       'setField': (name: string, value: string) => void;
       'validate': (elements: any) => any;
       'values': () => {};
@@ -62,41 +63,7 @@ declare global {
     export interface FormyFormAttributes extends HTMLAttributes {
       'customValidators'?: Function;
       'onSuccess'?: Function;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
-    interface MyComponent {
-      'first': string;
-      'last': string;
-    }
-  }
-
-  interface HTMLMyComponentElement extends StencilComponents.MyComponent, HTMLStencilElement {}
-
-  var HTMLMyComponentElement: {
-    prototype: HTMLMyComponentElement;
-    new (): HTMLMyComponentElement;
-  };
-  interface HTMLElementTagNameMap {
-    'my-component': HTMLMyComponentElement;
-  }
-  interface ElementTagNameMap {
-    'my-component': HTMLMyComponentElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'my-component': JSXElements.MyComponentAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface MyComponentAttributes extends HTMLAttributes {
-      'first'?: string;
-      'last'?: string;
+      'options'?: Object;
     }
   }
 }

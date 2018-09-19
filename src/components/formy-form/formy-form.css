@@ -1,9 +1,8 @@
-/* or, if the browser supports it: */
-input.hf-validated:invalid {
+/* Use to handle input in invalid state */
+formy-form input.hf-validated:invalid {
   border: 1px solid red;
 }
 
-/* div.hf-warning {
-  display: inline-block;
-  background: #f1f1f1;
-} */
+/* Use to handle input warning message when invalid */
+/* formy-form div.hr-warning {} */
+

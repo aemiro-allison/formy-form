@@ -10,16 +10,25 @@ export class FormyForm {
 
   @Prop() onSuccess: Function;
   @Prop() customValidators: Function;
+  @Prop() options: Object = {};
 
   @State() inputs: Array<HTMLInputElement>;
-
-  hyperform = hyperform;
+  @State() defaultOptions: Object = {
+    revalidate: 'onsubmit',
+  };
 
   componentDidLoad() {
-    this.hyperform(window, {
-      revalidate: 'onblur',
+    // have hyperform manage HTML5 Constraint API for all inputs where formy-form is used.
+    hyperform(this.el.querySelector('form'), {
+      ...this.defaultOptions,
+      ...this.options,
     });
-    this.inputs = Array.from(this.el.querySelectorAll('input, select, textarea'));
+    const inputs: Array<HTMLInputElement> = Array.from(
+      this.el.querySelectorAll('input, select, textarea')
+    );
+    // only interested in inputs with valid name attribute.
+    this.inputs = inputs.filter(input => input.name);
+    // console.log(this.inputs);
   }
 
   getFormData() {
@@ -53,15 +62,15 @@ export class FormyForm {
 
   @Method()
   values() {
-    const types = ['checkbox'];
     let values = {};
     this.inputs.forEach(input => {
       const { name, value, type, checked } = input;
       if (name) {
         values[name] = value;
-      }
-      if (types.includes(type)) {
-        values[name] = checked;
+        // handle special inputs
+        if (type === 'checkbox') {
+          values[name] = checked;
+        }
       }
     });
     return values;
@@ -85,7 +94,7 @@ export class FormyForm {
     this.customValidators &&
       this.customValidators({
         elements,
-        addValidator: this.hyperform.addValidator,
+        addValidator: hyperform.addValidator,
       });
     const isValid = this.inputs.reduce((acc, input) => {
       // @ts-ignore
@@ -104,14 +113,12 @@ export class FormyForm {
       <form
         onSubmit={(e: Event) => {
           e.preventDefault();
-          // controls validation
           const isValid = this.validate(this.getFormData());
-          console.log('isValid', isValid);
+          // console.log('isValid', isValid);
           if (isValid) {
-            // onSuccess validation
             this.onSuccess && this.onSuccess(this.values(), {
               elements: this.getFormData(),
-              addValidator: this.hyperform.addValidator,
+              addValidator: hyperform.addValidator,
             });
           }
         }}>
