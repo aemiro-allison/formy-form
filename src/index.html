@@ -13,7 +13,13 @@
       const formy2 = formy[1];
 
       formy1.options = { revalidate: 'onblur' };
-      formy1.onSuccess = (values) => console.log('formy1', values);
+      formy1.onSuccess = (values, { elements, invalidate }) => {
+        if (values.zipcode !== '1234') {
+          invalidate(elements.zipcode, 'Zipcode must be 1234');
+        } else {
+          console.log('success, form can now submit');
+        }
+      };
 
       formy2.options = { revalidate: 'onsubmit' };
       formy2.onSuccess = (values) => console.log('formy2', values);
