@@ -37,6 +37,7 @@ declare global {
       'onSuccess': Function;
       'options': Object;
       'setField': (name: string, value: string) => void;
+      'submit': () => Promise<Object>;
       'validate': (elements: any) => any;
       'values': () => {};
     }

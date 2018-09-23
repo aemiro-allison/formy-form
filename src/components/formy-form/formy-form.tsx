@@ -13,7 +13,8 @@ export class FormyForm {
   @Prop() options: Object = {};
 
   @State() inputs: Array<HTMLInputElement>;
-  @State() defaultOptions: Object = {
+
+  defaultOptions: Object = {
     revalidate: 'onsubmit',
   };
 
@@ -81,7 +82,7 @@ export class FormyForm {
     let errors = {};
     this.inputs.forEach(input => {
       const { name } = input;
-      if (name && input.classList.contains('hr-validated')) {
+      if (name) {
         errors[name] = input.validationMessage;
       }
     })
@@ -108,6 +109,23 @@ export class FormyForm {
     this.inputs.forEach(input => input.value = '');
   }
 
+  @Method()
+  submit(): Promise<Object> {
+    const options = {
+      elements: this.getFormData(),
+      addValidator: hyperform.addValidator,
+    };
+
+    return new Promise((resolve, reject) => {
+      const isValid = this.validate(this.getFormData());
+      if (isValid) {
+        resolve({ values: this.values(), ...options });
+      } else {
+        reject({ errors: this.errors(), ...options });
+      }
+    })
+  }
+
   render() {
     return (
       <form
@@ -120,6 +138,7 @@ export class FormyForm {
               elements: this.getFormData(),
               addValidator: hyperform.addValidator,
             });
+            if (!this.onSuccess) console.error('no onSuccess method was passed to formy-form');
           }
         }}>
         <slot />
