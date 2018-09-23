@@ -13,6 +13,7 @@ export class FormyForm {
   @Prop() options: Object = {};
 
   @State() inputs: Array<HTMLInputElement>;
+  @State() invalidValues: Object = {};
 
   defaultOptions: Object = {
     revalidate: 'onsubmit',
@@ -32,7 +33,7 @@ export class FormyForm {
     // console.log(this.inputs);
   }
 
-  getFormData() {
+  getFormData(): Object {
     let elements = {};
     this.inputs.forEach((input) => {
       const { name } = input;
@@ -62,7 +63,7 @@ export class FormyForm {
   }
 
   @Method()
-  values() {
+  values(): Object {
     let values = {};
     this.inputs.forEach(input => {
       const { name, value, type, checked } = input;
@@ -78,7 +79,7 @@ export class FormyForm {
   }
 
   @Method()
-  errors() {
+  errors(): Object {
     let errors = {};
     this.inputs.forEach(input => {
       const { name } = input;
@@ -90,7 +91,7 @@ export class FormyForm {
   }
 
   @Method()
-  validate(elements) {
+  validate(elements): boolean {
     // setup extra validators
     this.customValidators &&
       this.customValidators({
@@ -104,6 +105,40 @@ export class FormyForm {
     return isValid;
   }
 
+  updateInvalidValues(element): void {
+    const { name, value } = element;
+    if (this.invalidValues[name]) {
+      this.invalidValues = {
+        ...this.invalidValues,
+        [name]: [...this.invalidValues[name], value],
+      };
+    } else {
+      this.invalidValues = {
+        ...this.invalidValues,
+        [name]: [value],
+      }
+    }
+  }
+
+  addInvalidValuesValidatorOnce(element, errorMsg): void {
+    if (!this.invalidValues[element.name]) {
+      hyperform.addValidator(element, el => {
+        const invalidValues = this.invalidValues[el.name] || [el.value];
+        console.log('invalidValues', invalidValues);
+        const valid = !invalidValues.includes(el.value);
+        const errorMessage = errorMsg || 'Something went wrong.';
+        el.setCustomValidity(valid ? '' : errorMessage);
+      });
+    }
+  }
+
+  @Method()
+  invalidate = (element, errorMsg): void => {
+    this.addInvalidValuesValidatorOnce(element, errorMsg);
+    this.updateInvalidValues(element);
+    element.reportValidity();
+  }
+
   @Method()
   clear(): void {
     this.inputs.forEach(input => input.value = '');
@@ -113,7 +148,7 @@ export class FormyForm {
   submit(): Promise<Object> {
     const options = {
       elements: this.getFormData(),
-      addValidator: hyperform.addValidator,
+      invalidate: this.invalidate,
     };
 
     return new Promise((resolve, reject) => {
@@ -136,7 +171,7 @@ export class FormyForm {
           if (isValid) {
             this.onSuccess && this.onSuccess(this.values(), {
               elements: this.getFormData(),
-              addValidator: hyperform.addValidator,
+              invalidate: this.invalidate,
             });
             if (!this.onSuccess) console.error('no onSuccess method was passed to formy-form');
           }

@@ -33,13 +33,13 @@ declare global {
       '$': (name: string) => HTMLInputElement;
       'clear': () => void;
       'customValidators': Function;
-      'errors': () => {};
+      'errors': () => Object;
       'onSuccess': Function;
       'options': Object;
       'setField': (name: string, value: string) => void;
       'submit': () => Promise<Object>;
-      'validate': (elements: any) => any;
-      'values': () => {};
+      'validate': (elements: any) => boolean;
+      'values': () => Object;
     }
   }
 
