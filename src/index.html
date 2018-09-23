@@ -14,9 +14,16 @@
 
       formy1.options = { revalidate: 'onblur' };
       formy1.onSuccess = (values, { elements, invalidate }) => {
-        if (values.zipcode !== '1234') {
-          invalidate(elements.zipcode, 'Zipcode must be 1234');
-        } else {
+        const validInputs = values.members.filter((mem, i) => {
+          const isValid = ['1234', '0000'].includes(mem.zipcode);
+          if (!isValid) {
+            invalidate(elements[`members[${i}][zipcode]`], 'Zipcode must be 1234 or 0000');
+          }
+          return isValid;
+        });
+        console.log('values', values);
+
+        if (validInputs.length) {
           console.log('success, form can now submit');
         }
       };
@@ -29,8 +36,12 @@
 
 <body>
   <formy-form>
-    <input name="password" type="password" required placeholder="password" />
-    <input name="zipcode" type="number" required placeholder="zipcode" />
+    <input name="members[0][password]" type="password" required placeholder="password" />
+    <input name="members[0][zipcode]" type="number" required placeholder="zipcode" />
+
+    <input name="members[1][password]" type="password" required placeholder="password" />
+    <input name="members[1][zipcode]" type="number" required placeholder="zipcode" />
+
     <input name="enable_two_factor" type="checkbox" />
     <button type="submit">submit</button>
   </formy-form>
