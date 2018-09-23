@@ -1,7 +1,7 @@
 {
   "name": "formy-form",
-  "version": "0.0.2",
-  "description": "A Stenciljs powered form web component",
+  "version": "0.0.3",
+  "description": "A form web component leveraging the HTML5 Constraint API. Powered by hyperform.js and stencil.js.",
   "engines": {
     "node": "9.11.1",
     "npm": "6.4.0"
