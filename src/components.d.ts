@@ -31,8 +31,8 @@ declare global {
   namespace StencilComponents {
     interface FormyForm {
       '$': (name: string) => HTMLInputElement;
+      'addCustomValidators': Function;
       'clear': () => void;
-      'customValidators': Function;
       'errors': () => Object;
       'onSuccess': Function;
       'options': Object;
@@ -62,7 +62,7 @@ declare global {
   }
   namespace JSXElements {
     export interface FormyFormAttributes extends HTMLAttributes {
-      'customValidators'?: Function;
+      'addCustomValidators'?: Function;
       'onSuccess'?: Function;
       'options'?: Object;
     }

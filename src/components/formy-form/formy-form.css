@@ -1,8 +1,8 @@
 /* Use to handle input in invalid state */
-formy-form input.hf-validated:invalid {
+input.hf-validated:invalid {
   border: 1px solid red;
 }
 
 /* Use to handle input warning message when invalid */
-/* formy-form div.hr-warning {} */
+div.hf-warning {}
 
